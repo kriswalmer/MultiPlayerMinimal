@@ -40,7 +40,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         //
         AppSettings aps = getAppSettings();
         //
-   //     Serializer.registerClass(HelloMessage.class);
+        //     Serializer.registerClass(HelloMessage.class);
         GameClient app = new GameClient();
         app.setShowSettings(false);
         app.setSettings(aps);
@@ -61,8 +61,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         // CONNECT TO SERVER!
         networkHandler = new ClientNetworkHandler(this);
         //
-       
-        
+
+
         initGui();
         initCam();
         initLightandShadow();
@@ -150,35 +150,43 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
     // Keyboard input
     private void initKeys() {
         inputManager.addMapping("PL_EXPLODE", new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_B));
-      //  inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_T));
-      //  inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_I));
-      //  inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_Q));
+        inputManager.addMapping("Attack", new KeyTrigger(KeyInput.KEY_W));
+        inputManager.addMapping("Infusion", new KeyTrigger(KeyInput.KEY_E));
+        inputManager.addMapping("Donation", new KeyTrigger(KeyInput.KEY_R));
         inputManager.addMapping("Target", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-        
-        inputManager.addListener(this, new String[]{"PL_EXPLODE" , "Absorb" , "Attack" , "Infusion" , "Donation","Target"});
-        
-        
+
+        inputManager.addListener(this, new String[]{"PL_EXPLODE", "Absorb", "Attack", "Infusion", "Donation", "Target"});
+
+
     }
 
     // key action
     @SuppressWarnings("empty-statement")
     public void onAction(String name, boolean isPressed, float tpf) {
         if (isPressed) {
-            if(name.equals("Target")){
+            if (name.equals("Target")) {
                 //Sends a Vector3f message to server. Server finds closest planet to that position and sets it as target
                 Vector3f targetLocation = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0);
                 System.out.println(targetLocation.toString());
             }
-            System.out.println("name = " + name );
-           
-                NewClientMessage ncm =  new NewClientMessage(name + "name");
-                ncm.setString(name);
-                networkHandler.send(ncm);
-          //      rootNode.rotate( 0.5f , 0.5f , 0.5f);
-            
-               
-         
+            if (name.equals("Absorb")) {//TODO. Absorb server messsage.
+            }
+            if (name.equals("Attack")) {//TODO. Attack server mesage
+            }
+            if (name.equals("Infusion")) {//TODO. Infusion server message
+            }
+            if (name.equals("Donation")) { //TODO. DOnation server message
+            }
+            System.out.println("name = " + name);
+
+            NewClientMessage ncm = new NewClientMessage(name + "name");
+            ncm.setString(name);
+            networkHandler.send(ncm);
+            //      rootNode.rotate( 0.5f , 0.5f , 0.5f);
+
+
+
         }
     }
 
@@ -186,18 +194,17 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
     // message received
     public void messageReceived(Message msg) {
         if (msg instanceof NewClientMessage) {
-            
-            
-            NewClientMessage ncm = (NewClientMessage)msg;
-            
-            if ((ncm.field!= null ) && (ncm.field.getLast() != null ))
-            if (this.ID == -1) {
-                initGame(ncm);
-            } 
-            
-            else if (ncm.field.getLast() != null ) {
-                playfield.addSphere(ncm.field.getLast());
-                System.out.println(ncm.getString());
+
+
+            NewClientMessage ncm = (NewClientMessage) msg;
+
+            if ((ncm.field != null) && (ncm.field.getLast() != null)) {
+                if (this.ID == -1) {
+                    initGame(ncm);
+                } else if (ncm.field.getLast() != null) {
+                    playfield.addSphere(ncm.field.getLast());
+                    System.out.println(ncm.getString());
+                }
             }
         }
     }
