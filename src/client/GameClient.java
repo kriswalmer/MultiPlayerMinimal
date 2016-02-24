@@ -148,10 +148,10 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
     // Keyboard input
     private void initKeys() {
         inputManager.addMapping("PL_EXPLODE", new KeyTrigger(KeyInput.KEY_SPACE));
-        inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_B));
-      //  inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_T));
-      //  inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_I));
-      //  inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_Q));
+        inputManager.addMapping("Attack", new KeyTrigger(KeyInput.KEY_W));
+        inputManager.addMapping("Infusion", new KeyTrigger(KeyInput.KEY_E));
+        inputManager.addMapping("Donation", new KeyTrigger(KeyInput.KEY_R));
         
         inputManager.addListener(this, new String[]{"PL_EXPLODE" , "Absorb" , "Attack" , "Infusion" , "Donation"});
         
@@ -166,9 +166,9 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
            
                 NewClientMessage ncm =  new NewClientMessage(name + "name");
                 ncm.setString(name);
+                ncm.ID = ID ; 
                 networkHandler.send(ncm);
-          //      rootNode.rotate( 0.5f , 0.5f , 0.5f);
-            
+          
                
          
         }
