@@ -11,6 +11,8 @@ public class NewClientMessage extends AbstractMessage {
     public int ID;
     public LinkedList<FieldData> field;
     public String s  ; 
+    int target;
+    
 
     // -------------------------------------------------------------------------
     public NewClientMessage() {
@@ -37,5 +39,14 @@ public class NewClientMessage extends AbstractMessage {
     return s ; 
     }
    
+     
+       public NewClientMessage(int ID, LinkedList<FieldData> playfield, int target, String attackType) {
+        super();
+        this.ID = ID;
+        this.field = playfield;
+        this.target=target;
+        s = attackType;
+                
+    }
    
 }
