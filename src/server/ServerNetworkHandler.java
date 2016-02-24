@@ -38,13 +38,23 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
         gameServer.messageReceived(msg);
         
         
-         if (msg instanceof NewClientMessage) {
+     if (msg instanceof NewClientMessage) {
       // do something with the message
       NewClientMessage ncm = (NewClientMessage) msg ; 
       System.out.println(" received: '"+ncm.getString()+"'");
+      if(ncm.getString().equals("Absorb"))
+      {
+      
+          System.out.println("absorb target ");
+          NewClientMessage ncmtarget = (NewClientMessage) msg ; 
+          
+          
+      }
+      
+      
        ncm.setString("message recieved + " + ncm.getString());
-       
-       sendToClient(0, ncm );
+        
+       sendToClient(ncm.ID, ncm );
       
          }
     }
