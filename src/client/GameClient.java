@@ -4,8 +4,10 @@ import com.jme3.app.DebugKeysAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
 import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
@@ -152,8 +154,9 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
       //  inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_T));
       //  inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_I));
       //  inputManager.addMapping("Absorb", new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping("Target", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         
-        inputManager.addListener(this, new String[]{"PL_EXPLODE" , "Absorb" , "Attack" , "Infusion" , "Donation"});
+        inputManager.addListener(this, new String[]{"PL_EXPLODE" , "Absorb" , "Attack" , "Infusion" , "Donation","Target"});
         
         
     }
@@ -162,6 +165,11 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
     @SuppressWarnings("empty-statement")
     public void onAction(String name, boolean isPressed, float tpf) {
         if (isPressed) {
+            if(name.equals("Target")){
+                //Sends a Vector3f message to server. Server finds closest planet to that position and sets it as target
+                Vector3f targetLocation = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0);
+                System.out.println(targetLocation.toString());
+            }
             System.out.println("name = " + name );
            
                 NewClientMessage ncm =  new NewClientMessage(name + "name");
