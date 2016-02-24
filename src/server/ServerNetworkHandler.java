@@ -36,20 +36,82 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
     // -------------------------------------------------------------------------
     public void messageReceived(Object source, Message msg) {
         gameServer.messageReceived(msg);
-        
-        
+         final int STATE_ABSORB = 1 ; 
+         final int STATE_ATTACK = 2 ; 
+         final int STATE_DONATION = 3 ; 
+         final int STATE_INFUSION = 4 ; 
+         final int STATE_STOP_ABSORB = 5 ;
+         final int STATE_STOP_DONATION = 6 ;
+         int state = 0  ; 
+         
+         
      if (msg instanceof NewClientMessage) {
       // do something with the message
       NewClientMessage ncm = (NewClientMessage) msg ; 
       System.out.println(" received: '"+ncm.getString()+"'");
-      if(ncm.getString().equals("Absorb"))
-      {
       
-          System.out.println("absorb target ");
-          NewClientMessage ncmtarget = (NewClientMessage) msg ; 
-          
-          
-      }
+      
+      if(ncm.getString().equals("Absorb") && state != STATE_ABSORB)
+      {  state  = STATE_ABSORB ; 
+         } 
+      else if(ncm.getString().equals("Absorb") && state == STATE_ABSORB)
+      {  state  = STATE_STOP_ABSORB ; 
+         } 
+      
+      else if(ncm.getString().equals("Attack"))
+      {  state  = STATE_ATTACK ; } 
+      
+      else if(ncm.getString().equals("Donation") && state != STATE_DONATION)
+      {  state  = STATE_DONATION ; } 
+      
+      else if(ncm.getString().equals("Donation")&& state == STATE_DONATION)
+      {  state  = STATE_STOP_DONATION ; } 
+      
+      else if(ncm.getString().equals("Infusion"))
+      {  state  = STATE_INFUSION ; } 
+      
+      
+          switch(state)
+          {
+              case ( STATE_ABSORB ):         
+              {
+                
+                 }
+                  
+               case ( STATE_ATTACK ):         
+              {
+     
+                 }
+               case ( STATE_DONATION ):         
+              {
+     
+                 }
+               case ( STATE_INFUSION ):         
+              {
+     
+                 }
+               case(STATE_STOP_ABSORB):
+               {
+               
+               
+               }
+               case(STATE_STOP_DONATION):
+               {
+               
+               
+               
+               }
+                  
+                  
+                  
+             }
+      //    System.out.println("absorb target ");
+      //    NewClientMessage ncmtarget = (NewClientMessage) msg ; 
+      // TODO add ncm to target after target ID is in NCM class  
+      //sendToClient(ncm.getTarget() ncmtarget);
+      // AttackMethods am = new AttackMethod(); 
+      //  am.absorb()
+      
       
       
        ncm.setString("message recieved + " + ncm.getString());
