@@ -11,10 +11,11 @@ import server.FieldData;
 public class NewClientMessage extends AbstractMessage {
 
     public int ID;
+    
     public LinkedList<FieldData> field;
     public String s  ; 
-    Vector3f target;
-    Player player;
+    public Vector3f target;
+    public Player player;
     
 
     // -------------------------------------------------------------------------
