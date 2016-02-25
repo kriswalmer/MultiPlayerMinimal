@@ -21,12 +21,12 @@ public class GameServer implements ServerNetworkListener {
     public static void main(String[] args) {
         System.out.println("Starting Game Server at port " + ServerNetworkHandler.SERVERPORT);
         GameServer gs = new GameServer();
-       
+
         while (true) {
             try {
                 Thread.sleep(1000);
-                
-                
+
+
             } catch (InterruptedException ex) {
             }
         }
@@ -38,11 +38,9 @@ public class GameServer implements ServerNetworkListener {
         playfield = new PlayField();
     }
 
-
     // -------------------------------------------------------------------------
     // Methods required by ServerNetworkHandler
     public void messageReceived(Message msg) {
-        
     }
 
     // -------------------------------------------------------------------------
@@ -55,9 +53,13 @@ public class GameServer implements ServerNetworkListener {
         // send entire playfield to new client
         NewClientMessage iniCM = new NewClientMessage(connectionID, playfield.data);
         iniCM.setString("Hello client");
-        
-        
-        
+
+
+
         return (iniCM);
+    }
+
+    public PlayField getPlayfield() {
+        return playfield;
     }
 }

@@ -9,6 +9,7 @@ import server.FieldData;
 public class NewClientMessage extends AbstractMessage {
 
     public int ID;
+    public int target;
     public LinkedList<FieldData> field;
     public String s  ; 
 
@@ -21,6 +22,7 @@ public class NewClientMessage extends AbstractMessage {
         super();
         this.ID = ID;
         this.field = playfield;
+        this.target = ID +1;
     }
     public NewClientMessage(String st )
     {
