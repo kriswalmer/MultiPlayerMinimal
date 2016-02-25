@@ -39,5 +39,9 @@ public class NewClientMessage extends AbstractMessage {
     return s ; 
     }
    
+   public NewClientMessage(String s, int i){
+       
+   }
+   
    
 }

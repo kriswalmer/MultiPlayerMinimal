@@ -3,6 +3,8 @@ package client;
 import com.jme3.app.DebugKeysAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.StatsAppState;
+import com.jme3.collision.CollisionResult;
+import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
@@ -11,10 +13,10 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Ray;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.network.AbstractMessage;
 import com.jme3.network.Message;
-import com.jme3.network.serializing.Serializer;
 
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
@@ -40,7 +42,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         //
         AppSettings aps = getAppSettings();
         //
-   //     Serializer.registerClass(HelloMessage.class);
+        //     Serializer.registerClass(HelloMessage.class);
         GameClient app = new GameClient();
         app.setShowSettings(false);
         app.setSettings(aps);
@@ -61,8 +63,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         // CONNECT TO SERVER!
         networkHandler = new ClientNetworkHandler(this);
         //
-       
-        
+
+
         initGui();
         initCam();
         initLightandShadow();
@@ -155,32 +157,57 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         inputManager.addMapping("Infusion", new KeyTrigger(KeyInput.KEY_E));
         inputManager.addMapping("Donation", new KeyTrigger(KeyInput.KEY_R));
         inputManager.addMapping("Target", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-        
-        inputManager.addListener(this, new String[]{"PL_EXPLODE" , "Absorb" , "Attack" , "Infusion" , "Donation","Target"});
-        
-        
+
+        inputManager.addListener(this, new String[]{"PL_EXPLODE", "Absorb", "Attack", "Infusion", "Donation", "Target"});
+
+
     }
 
     // key action
     @SuppressWarnings("empty-statement")
     public void onAction(String name, boolean isPressed, float tpf) {
         if (isPressed) {
-            
-            if(name.equals("Target")){
+
+            if (name.equals("Target")) {
+
+                Vector2f mouseCoords = new Vector2f(inputManager.getCursorPosition().x, inputManager.getCursorPosition().y);
+
+                CollisionResults results = new CollisionResults();
+
+                Vector3f pos = cam.getWorldCoordinates(mouseCoords, 0).clone();
+
+                Vector3f dir = cam.getWorldCoordinates(mouseCoords, 1f).clone();
+
+                dir.subtractLocal(pos).normalizeLocal();
+
+                Ray ray = new Ray(pos, dir);
                 
+                playfield.p.playerNode.collideWith(ray, results);
+                
+                System.out.println(ray.getDirection());
+                System.out.println(playfield.p.playerNode.getLocalTranslation());
+                
+                if(results.size() > 0){
+                    System.out.println("We did it");
+                    System.out.println(results.getClosestCollision().getContactPoint().toString());
+                }
+                
+
                 NewClientMessage ncm = new NewClientMessage(cam.getWorldCoordinates(inputManager.getCursorPosition(), 0).toString());
                 networkHandler.send(ncm);
-                
+//                System.out.println(playfield.p.fd.x + "," + playfield.p.fd.y + "," + playfield.p.fd.z);
+
+
             }
-            System.out.println("name = " + name );
-           
-                NewClientMessage ncm =  new NewClientMessage(name + "name");
-                ncm.setString(name);
-                ncm.ID = ID ; 
-                networkHandler.send(ncm);
-          
-               
-         
+            System.out.println("name = " + name);
+
+            NewClientMessage ncm = new NewClientMessage(name + "name");
+            ncm.setString(name);
+            ncm.ID = ID;
+            networkHandler.send(ncm);
+
+
+
         }
     }
 
@@ -188,18 +215,17 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
     // message received
     public void messageReceived(Message msg) {
         if (msg instanceof NewClientMessage) {
-            
-            
-            NewClientMessage ncm = (NewClientMessage)msg;
-            
-            if ((ncm.field!= null ) && (ncm.field.getLast() != null ))
-            if (this.ID == -1) {
-                initGame(ncm);
-            } 
-            
-            else if (ncm.field.getLast() != null ) {
-                playfield.addSphere(ncm.field.getLast());
-                System.out.println(ncm.getString());
+
+
+            NewClientMessage ncm = (NewClientMessage) msg;
+
+            if ((ncm.field != null) && (ncm.field.getLast() != null)) {
+                if (this.ID == -1) {
+                    initGame(ncm);
+                } else if (ncm.field.getLast() != null) {
+                    playfield.addSphere(ncm.field.getLast());
+                    System.out.println(ncm.getString());
+                }
             }
         }
     }

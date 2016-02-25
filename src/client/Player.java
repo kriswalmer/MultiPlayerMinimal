@@ -8,6 +8,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Sphere;
 import server.FieldData;
 
@@ -15,10 +16,12 @@ import server.FieldData;
  *
  * @author Cary
  */
-public class Player {
+public class Player  {
     
     int energyLevel=100;
     FieldData fd;
+    Node playerNode = new Node();
+    
     
     
     public Player(FieldData fd, SimpleApplication sa){
@@ -34,7 +37,8 @@ public class Player {
         mat.setFloat("Shininess", 20f); // shininess from 1-128
         sg.setMaterial(mat);
         sg.setLocalTranslation(fd.x, fd.y, fd.z);
-        sa.getRootNode().attachChild(sg);
+        playerNode.attachChild(sg);
+        
      
     }
     

@@ -24,6 +24,7 @@ public class ClientPlayfield {
 
     public void addSphere(FieldData fd) {
         p = new Player(fd, sa);
+        sa.getRootNode().attachChild(p.playerNode);
         initText(p);
     }
 
