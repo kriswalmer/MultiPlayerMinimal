@@ -80,7 +80,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
               {
                 
                 ncm.setString(ncm.target+ " being absorbed by " +  ncm.ID );
-                  sendToClient(ncm.target , ncm)   ; 
+                  sendToClient(GameServer.getClosestPlayer(ncm.target) , ncm)   ; 
                   //ncm.target start decreasing using System.time.currentMILLIS()
                   //ncm.ID start inscreasing
               }
@@ -89,7 +89,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
               {
      
                   ncm.setString(ncm.target+ " being attacked by " +  ncm.ID );
-                  sendToClient(ncm.target , ncm)   ;
+                  sendToClient(GameServer.getClosestPlayer(ncm.target) , ncm)   ;
                   
                   /*if(ncm.target getNodeScore() <  .5f *  ncm.ID getNodeScore())
                    
@@ -124,7 +124,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
      
                   
                   ncm.setString(ncm.target+ " being donated from " +  ncm.ID );
-                  sendToClient(ncm.target , ncm)   ;
+                  sendToClient(GameServer.getClosestPlayer(ncm.target) , ncm)   ;
                   
                   /* exact same concept as absorb*/
                   
@@ -134,7 +134,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
               {
      
                   ncm.setString(ncm.target+ " being infused from " +  ncm.ID );
-                  sendToClient(ncm.target , ncm)   ;
+                  sendToClient(GameServer.getClosestPlayer(ncm.target), ncm)   ;
                   
                  }
                    break;
@@ -142,14 +142,14 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                {
                
                ncm.setString(ncm.target+ " stopping absorb from " +  ncm.ID );
-                  sendToClient(ncm.target , ncm)   ;
+                  sendToClient(GameServer.getClosestPlayer(ncm.target) , ncm)   ;
                }
                    break ; 
                case(STATE_STOP_DONATION):
                {
                
                ncm.setString(ncm.target+ " stopping donation from " +  ncm.ID );
-                  sendToClient(ncm.target , ncm)   ;
+                  sendToClient(GameServer.getClosestPlayer(ncm.target), ncm)   ;
                   
                
                }
