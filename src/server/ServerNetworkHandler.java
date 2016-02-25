@@ -84,7 +84,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                   //ncm.target start decreasing using System.time.currentMILLIS()
                   //ncm.ID start inscreasing
               }
-                  
+                  break ; 
                case ( STATE_ATTACK ):         
               {
      
@@ -116,6 +116,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                    */
                   
                  }
+                   break ; 
                case ( STATE_DONATION ):         
               {
      
@@ -126,6 +127,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                   /* exact same concept as absorb*/
                   
                  }
+                   break ;
                case ( STATE_INFUSION ):         
               {
      
@@ -133,21 +135,23 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                   sendToClient(ncm.target , ncm)   ;
                   
                  }
+                   break;
                case(STATE_STOP_ABSORB):
                {
                
                ncm.setString(ncm.target+ " stopping absorb from " +  ncm.ID );
                   sendToClient(ncm.target , ncm)   ;
                }
+                   break ; 
                case(STATE_STOP_DONATION):
                {
                
                ncm.setString(ncm.target+ " stopping donation from " +  ncm.ID );
                   sendToClient(ncm.target , ncm)   ;
-                  broadcast(ncm); 
+                  
                
                }
-                  
+                  break ; 
                   
                   
              }
