@@ -79,6 +79,8 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                 
                 ncm.setString(ncm.target+ " being absorbed by " +  ncm.ID );
                   sendToClient(ncm.target , ncm)   ; 
+                  //ncm.target start decreasing using System.time.currentMILLIS()
+                  //ncm.ID start inscreasing
               }
                   
                case ( STATE_ATTACK ):         
@@ -87,6 +89,30 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                   ncm.setString(ncm.target+ " being attacked by " +  ncm.ID );
                   sendToClient(ncm.target , ncm)   ;
                   
+                  /*if(ncm.target getNodeScore() <  .5f *  ncm.ID getNodeScore())
+                   
+                   * Create red lazer arrow 
+                   * get location 
+                   * 
+                   * 
+                   * 
+                   * 
+                   *  Arrow arrow = new Arrow(new Vector3f(ncm.ID));
+                         arrow.setLineWidth(5f);
+                         geomArrow = new Geometry("a", arrow);
+                         * Material matArrow =  
+                         
+                                mat = new Material(assetManager,
+                          "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material
+                         mat.setColor("Color", ColorRGBA.Red);
+                        geomArrow.setMaterial(mat);
+                        * sa.getRootNode.attach(geomArrow);
+                        * 
+                   * detach ncm target 
+                   * 
+                   
+                   */
+                  
                  }
                case ( STATE_DONATION ):         
               {
@@ -94,6 +120,8 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                   
                   ncm.setString(ncm.target+ " being donated from " +  ncm.ID );
                   sendToClient(ncm.target , ncm)   ;
+                  
+                  /* exact same concept as absorb*/
                   
                  }
                case ( STATE_INFUSION ):         
