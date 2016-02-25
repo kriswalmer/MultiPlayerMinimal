@@ -33,6 +33,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
     private int ID = -1;
     protected ClientNetworkHandler networkHandler;
     private ClientPlayfield playfield;
+    Vector3f target;
 
     // -------------------------------------------------------------------------
     public static void main(String[] args) {
@@ -167,17 +168,13 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         if (isPressed) {
             if (name.equals("Target")) {
                 //Sends a Vector3f message to server. Server finds closest planet to that position and sets it as target
-                Vector3f targetLocation = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0);
-                System.out.println(targetLocation.toString());
+                target = cam.getWorldCoordinates(inputManager.getCursorPosition(), 0);
+                System.out.println(target.toString());
+            } else {
+                NewClientMessage ncm = new NewClientMessage(playfield.p, this.ID, target, name);
+                networkHandler.send(ncm);
             }
-            if (name.equals("Absorb")) {//TODO. Absorb server messsage.
-            }
-            if (name.equals("Attack")) {//TODO. Attack server mesage
-            }
-            if (name.equals("Infusion")) {//TODO. Infusion server message
-            }
-            if (name.equals("Donation")) { //TODO. DOnation server message
-            }
+
             System.out.println("name = " + name);
 
             NewClientMessage ncm = new NewClientMessage(name + "name");

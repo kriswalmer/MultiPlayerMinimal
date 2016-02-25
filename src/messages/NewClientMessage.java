@@ -1,5 +1,7 @@
 package messages;
 
+import client.Player;
+import com.jme3.math.Vector3f;
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 import java.util.LinkedList;
@@ -11,7 +13,8 @@ public class NewClientMessage extends AbstractMessage {
     public int ID;
     public LinkedList<FieldData> field;
     public String s  ; 
-    int target;
+    Vector3f target;
+    Player player;
     
 
     // -------------------------------------------------------------------------
@@ -39,14 +42,13 @@ public class NewClientMessage extends AbstractMessage {
     return s ; 
     }
    
-     
-       public NewClientMessage(int ID, LinkedList<FieldData> playfield, int target, String attackType) {
+      //get click location, send to server, compare to fielddata
+       public NewClientMessage(Player player, int ID, Vector3f target, String s) {
         super();
         this.ID = ID;
-        this.field = playfield;
+        this.s = s;
         this.target=target;
-        s = attackType;
-                
+        this.player = player;
     }
    
 }
