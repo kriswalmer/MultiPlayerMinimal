@@ -68,7 +68,8 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
       {  state  = STATE_STOP_DONATION ; } 
       
       else if(ncm.getString().equals("Infusion"))
-      {  state  = STATE_INFUSION ; } 
+      {  state  = STATE_INFUSION ; }
+      else{state = 0 ;}
       
       
           switch(state)
@@ -76,29 +77,43 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
               case ( STATE_ABSORB ):         
               {
                 
-                 }
+                ncm.setString(ncm.target+ " being absorbed by " +  ncm.ID );
+                  sendToClient(ncm.target , ncm)   ; 
+              }
                   
                case ( STATE_ATTACK ):         
               {
      
+                  ncm.setString(ncm.target+ " being attacked by " +  ncm.ID );
+                  sendToClient(ncm.target , ncm)   ;
+                  
                  }
                case ( STATE_DONATION ):         
               {
      
+                  
+                  ncm.setString(ncm.target+ " being donated from " +  ncm.ID );
+                  sendToClient(ncm.target , ncm)   ;
+                  
                  }
                case ( STATE_INFUSION ):         
               {
      
+                  ncm.setString(ncm.target+ " being infused from " +  ncm.ID );
+                  sendToClient(ncm.target , ncm)   ;
+                  
                  }
                case(STATE_STOP_ABSORB):
                {
                
-               
+               ncm.setString(ncm.target+ " stopping absorb from " +  ncm.ID );
+                  sendToClient(ncm.target , ncm)   ;
                }
                case(STATE_STOP_DONATION):
                {
                
-               
+               ncm.setString(ncm.target+ " stopping donation from " +  ncm.ID );
+                  sendToClient(ncm.target , ncm)   ;
                
                }
                   
@@ -108,15 +123,15 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
       //    System.out.println("absorb target ");
       //    NewClientMessage ncmtarget = (NewClientMessage) msg ; 
       // TODO add ncm to target after target ID is in NCM class  
-      //sendToClient(ncm.getTarget() ncmtarget);
+      //sendToClient(ncm.getTarget() ,  ncmtarget);
       // AttackMethods am = new AttackMethod(); 
       //  am.absorb()
       
       
       
-       ncm.setString("message recieved + " + ncm.getString());
+  //     ncm.setString("message recieved + " + ncm.getString());
         
-       sendToClient(ncm.ID, ncm );
+  //     sendToClient(ncm.ID, ncm );
       
          }
     }
