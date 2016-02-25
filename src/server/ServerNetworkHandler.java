@@ -18,10 +18,12 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
     public static int SERVERPORT = 6143;
     Server server;
     ServerNetworkListener gameServer;
+    PlayField playfield ; 
 
     // -------------------------------------------------------------------------
     public ServerNetworkHandler(GameServer l) {
         gameServer = l;
+        this.playfield = l.getPlayfield() ; 
         try {
             server = Network.createServer(SERVERPORT);
             Registration.registerMessages();
@@ -142,6 +144,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                
                ncm.setString(ncm.target+ " stopping donation from " +  ncm.ID );
                   sendToClient(ncm.target , ncm)   ;
+                  broadcast(ncm); 
                
                }
                   
