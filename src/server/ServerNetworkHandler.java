@@ -1,5 +1,6 @@
 package server;
 
+import com.jme3.math.Vector3f;
 import com.jme3.network.ConnectionListener;
 import com.jme3.network.Filters;
 import com.jme3.network.HostedConnection;
@@ -47,9 +48,16 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
          int state = 0  ; 
          
          
+         
      if (msg instanceof NewClientMessage) {
       // do something with the message
       NewClientMessage ncm = (NewClientMessage) msg ; 
+      int targetID = PlayField.getClosestPlayer(ncm.target);
+      
+      if(targetID < 0){
+          System.out.println("No target found");
+      }else
+      
       System.out.println(" received: '"+ncm.getString()+"'");
       
       
@@ -80,7 +88,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
               {
                 
                 ncm.setString(ncm.target+ " being absorbed by " +  ncm.ID );
-                  sendToClient(GameServer.getClosestPlayer(ncm.target) , ncm)   ; 
+                  sendToClient(PlayField.getClosestPlayer(ncm.target) , ncm)   ; 
                   //ncm.target start decreasing using System.time.currentMILLIS()
                   //ncm.ID start inscreasing
               }
@@ -89,7 +97,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
               {
      
                   ncm.setString(ncm.target+ " being attacked by " +  ncm.ID );
-                  sendToClient(GameServer.getClosestPlayer(ncm.target) , ncm)   ;
+                  sendToClient(PlayField.getClosestPlayer(ncm.target) , ncm)   ;
                   
                   /*if(ncm.target getNodeScore() <  .5f *  ncm.ID getNodeScore())
                    
@@ -124,7 +132,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
      
                   
                   ncm.setString(ncm.target+ " being donated from " +  ncm.ID );
-                  sendToClient(GameServer.getClosestPlayer(ncm.target) , ncm)   ;
+                  sendToClient(targetID , ncm)   ;
                   
                   /* exact same concept as absorb*/
                   
@@ -134,7 +142,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
               {
      
                   ncm.setString(ncm.target+ " being infused from " +  ncm.ID );
-                  sendToClient(GameServer.getClosestPlayer(ncm.target), ncm)   ;
+                  sendToClient(targetID, ncm)   ;
                   
                  }
                    break;
@@ -142,14 +150,14 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                {
                
                ncm.setString(ncm.target+ " stopping absorb from " +  ncm.ID );
-                  sendToClient(GameServer.getClosestPlayer(ncm.target) , ncm)   ;
+                  sendToClient(targetID , ncm)   ;
                }
                    break ; 
                case(STATE_STOP_DONATION):
                {
                
                ncm.setString(ncm.target+ " stopping donation from " +  ncm.ID );
-                  sendToClient(GameServer.getClosestPlayer(ncm.target), ncm)   ;
+                  sendToClient(targetID, ncm)   ;
                   
                
                }

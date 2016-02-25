@@ -66,7 +66,5 @@ public class GameServer implements ServerNetworkListener {
         return playfield;
     }
     
-    public static int getClosestPlayer(Vector3f target){
-        return 1;
-    }
+    
 }
