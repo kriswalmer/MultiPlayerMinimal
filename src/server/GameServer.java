@@ -5,6 +5,7 @@ package server;
 
 import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.network.Message;
 import messages.NewClientMessage;
 
@@ -59,5 +60,13 @@ public class GameServer implements ServerNetworkListener {
         
         
         return (iniCM);
+    }
+    
+    public PlayField getPlayfield(){
+        return playfield;
+    }
+    
+    public static int getClosestPlayer(Vector3f target){
+        return 1;
     }
 }
