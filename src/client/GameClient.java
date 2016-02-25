@@ -168,6 +168,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
     public void onAction(String name, boolean isPressed, float tpf) {
         if (isPressed) {
 
+            Vector3f target = new Vector3f();
             if (name.equals("Target")) {
 
                 Vector2f mouseCoords = new Vector2f(inputManager.getCursorPosition().x, inputManager.getCursorPosition().y);
@@ -181,30 +182,31 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                 dir.subtractLocal(pos).normalizeLocal();
 
                 Ray ray = new Ray(pos, dir);
-                
+
                 playfield.p.playerNode.collideWith(ray, results);
-                
+
                 System.out.println(ray.getDirection());
                 System.out.println(playfield.p.playerNode.getLocalTranslation());
-                
-                if(results.size() > 0){
+
+                if (results.size() > 0) {
                     System.out.println("We did it");
                     System.out.println(results.getClosestCollision().getContactPoint().toString());
+                    target = results.getClosestCollision().getContactPoint();
                 }
-                
-
-                NewClientMessage ncm = new NewClientMessage(cam.getWorldCoordinates(inputManager.getCursorPosition(), 0).toString());
-                networkHandler.send(ncm);
-//                System.out.println(playfield.p.fd.x + "," + playfield.p.fd.y + "," + playfield.p.fd.z);
-
 
             }
-            System.out.println("name = " + name);
-
-            NewClientMessage ncm = new NewClientMessage(name + "name");
-            ncm.setString(name);
-            ncm.ID = ID;
+            
+            float x = target.x;
+            float y = target.y;
+            float z = target.z;
+            NewClientMessage ncm = new NewClientMessage(this.ID,x,y,z, name);
             networkHandler.send(ncm);
+            System.out.println("I Player "+this.ID +" Shot at player at "+ target.toString() +" using "+ name );
+
+//            NewClientMessage ncm = new NewClientMessage(name + "name");
+//            ncm.setString(name);
+//            ncm.ID = ID;
+//            networkHandler.send(ncm);
 
 
 
