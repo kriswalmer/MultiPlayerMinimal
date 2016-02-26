@@ -5,6 +5,7 @@
 package server;
 
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -16,7 +17,7 @@ public class PlayField {
 
     public final static float MINMAX = 10f;
     public final static float RADIUS = 1f;
-    public LinkedList<FieldData> data;
+    public  LinkedList<FieldData> data;
 
     // -------------------------------------------------------------------------
     public PlayField() {
@@ -40,5 +41,16 @@ public class PlayField {
         // here we could add a test for max. number of players reached.
         // (TODO)
         return (true);
+    }
+    
+     public int getClosestPlayer(Vector3f target){
+          int id = -1;
+          for(FieldData fd : data){
+              if(fd.getMyLocation().distance(target)<= 1){
+                  id = fd.id;
+              }
+          }
+        
+        return id;
     }
 }

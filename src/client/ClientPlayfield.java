@@ -7,6 +7,7 @@ package client;
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
+import java.util.LinkedList;
 import server.FieldData;
 
 /**
@@ -17,13 +18,16 @@ public class ClientPlayfield {
 
     SimpleApplication sa;
     Player p;
+    LinkedList<Player> players;
 
     public ClientPlayfield(SimpleApplication sa) {
         this.sa = sa;
+        players = new LinkedList<Player>();
     }
 
     public void addSphere(FieldData fd) {
-        p = new Player(fd, sa);
+        p = new Player(fd, sa);        
+        players.add(p);
         sa.getRootNode().attachChild(p.playerNode);
         initText(p);
     }

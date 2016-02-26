@@ -16,6 +16,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.network.AbstractMessage;
 import com.jme3.network.Message;
 
 import com.jme3.post.FilterPostProcessor;
@@ -35,6 +36,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
     private int ID = -1;
     protected ClientNetworkHandler networkHandler;
     private ClientPlayfield playfield;
+    private Vector3f target;
 
     // -------------------------------------------------------------------------
     public static void main(String[] args) {
@@ -166,10 +168,12 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
     // key action
     @SuppressWarnings("empty-statement")
     public void onAction(String name, boolean isPressed, float tpf) {
+
         if (isPressed) {
 
-            Vector3f target = new Vector3f();
+
             if (name.equals("Target")) {
+
 
                 Vector2f mouseCoords = new Vector2f(inputManager.getCursorPosition().x, inputManager.getCursorPosition().y);
 
@@ -179,14 +183,25 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 
                 Vector3f dir = cam.getWorldCoordinates(mouseCoords, 1f).clone();
 
+
+
                 dir.subtractLocal(pos).normalizeLocal();
 
                 Ray ray = new Ray(pos, dir);
 
-                playfield.p.playerNode.collideWith(ray, results);
+                for (Player player : playfield.players) {
+                    if(player.fd.id != this.ID){
+                         player.playerNode.collideWith(ray, results);
+                         System.out.println("TARGET PLAYER LOCATION: "+ player.fd.x + " ,"+player.fd.y+","+player.fd.z);
+                    }
+                    else{
+                        System.out.println("Cannot target yourself!");
+                    }
+                }
+              
 
                 System.out.println(ray.getDirection());
-                System.out.println(playfield.p.playerNode.getLocalTranslation());
+                //System.out.println(playfield.p.playerNode.getLocalTranslation());
 
                 if (results.size() > 0) {
                     System.out.println("We did it");
@@ -194,21 +209,23 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                     target = results.getClosestCollision().getContactPoint();
                 }
 
-            }
-            
-            float x = target.x;
-            float y = target.y;
-            float z = target.z;
-            NewClientMessage ncm = new NewClientMessage(this.ID,x,y,z, name);
-            networkHandler.send(ncm);
-            System.out.println("I Player "+this.ID +" Shot at player at "+ target.toString() +" using "+ name );
-
+            } else {
+                if (target == null) {
+                    System.out.println("NO TARGET FOUND");
+                } else {
+                    float x = target.x;
+                    float y = target.y;
+                    float z = target.z;
+                    NewClientMessage ncm = new NewClientMessage(this.ID, x, y, z, name);
+                    networkHandler.send(ncm);
+                    System.out.println("I Player " + this.ID + " Shot at player at " + target.toString() + " using " + name);
+//
 //            NewClientMessage ncm = new NewClientMessage(name + "name");
 //            ncm.setString(name);
 //            ncm.ID = ID;
 //            networkHandler.send(ncm);
-
-
+                }
+            }
 
         }
     }

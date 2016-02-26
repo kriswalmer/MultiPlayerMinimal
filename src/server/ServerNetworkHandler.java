@@ -19,7 +19,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
     public static int SERVERPORT = 6143;
     Server server;
     ServerNetworkListener gameServer;
-    PlayField playfield;
+    public PlayField playfield;
 
     // -------------------------------------------------------------------------
     public ServerNetworkHandler(GameServer l) {
@@ -53,21 +53,28 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
         if (msg instanceof NewClientMessage) {
             // do something with the message
             NewClientMessage ncm = (NewClientMessage) msg;
-            System.out.println(" received: '" + ncm.ability + "from" + ncm.ID +" @ "+ ncm.target.toString());
+            
+          
+           
+           Vector3f target = new Vector3f(ncm.x,ncm.y,ncm.z);
+           
+           
+            //int targetID = playfield.getClosestPlayer(target);
+           System.out.println(" received: '" + ncm.ability + " from player " + ncm.ID +" shooting @ "+ target + " who's ID is ");
            
 
 
-            if (ncm.getString().equals("Absorb") && state != STATE_ABSORB) {
+            if (ncm.ability.equals("Absorb") && state != STATE_ABSORB) {
                 state = STATE_ABSORB;
-            } else if (ncm.getString().equals("Absorb") && state == STATE_ABSORB) {
+            } else if (ncm.ability.equals("Absorb") && state == STATE_ABSORB) {
                 state = STATE_STOP_ABSORB;
-            } else if (ncm.getString().equals("Attack")) {
+            } else if (ncm.ability.equals("Attack")) {
                 state = STATE_ATTACK;
-            } else if (ncm.getString().equals("Donation") && state != STATE_DONATION) {
+            } else if (ncm.ability.equals("Donation") && state != STATE_DONATION) {
                 state = STATE_DONATION;
-            } else if (ncm.getString().equals("Donation") && state == STATE_DONATION) {
+            } else if (ncm.ability.equals("Donation") && state == STATE_DONATION) {
                 state = STATE_STOP_DONATION;
-            } else if (ncm.getString().equals("Infusion")) {
+            } else if (ncm.ability.equals("Infusion")) {
                 state = STATE_INFUSION;
             } else {
                 state = 0;

@@ -13,10 +13,10 @@ public class NewClientMessage extends AbstractMessage {
     public int ID;
     public LinkedList<FieldData> field;
     public String s;
-    public Player p;
-    float x, y, z;
-    public Vector3f target;
-    public String ability;
+//   public Player p;
+    public float x, y, z;
+   //public Vector3f target;
+   public String ability;
 
     // -------------------------------------------------------------------------
     public NewClientMessage() {
