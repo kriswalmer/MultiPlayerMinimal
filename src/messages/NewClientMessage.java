@@ -4,6 +4,7 @@ import client.Player;
 import com.jme3.math.Vector3f;
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
+import com.jme3.util.SafeArrayList;
 import java.util.LinkedList;
 import server.FieldData;
 
@@ -15,8 +16,9 @@ public class NewClientMessage extends AbstractMessage {
     public String s;
 //   public Player p;
     public float x, y, z;
-   //public Vector3f target;
-   public String ability;
+    //public Vector3f target;
+    public String ability;
+    public boolean isPlayer;
 
     // -------------------------------------------------------------------------
     public NewClientMessage() {
@@ -27,6 +29,7 @@ public class NewClientMessage extends AbstractMessage {
         super();
         this.ID = ID;
         this.field = playfield;
+        this.isPlayer= false;
 
     }
 
@@ -42,15 +45,24 @@ public class NewClientMessage extends AbstractMessage {
         return s;
     }
 
-    public NewClientMessage( int ID, float x, float y, float z, String ability) {
+    public NewClientMessage(int ID, float x, float y, float z, String ability) {
         super();
         this.ID = ID;
         this.x = x;
         this.y = y;
         this.z = z;
         this.ability = ability;
+        this.isPlayer = false;
 
     }
-    
-    
+
+    public NewClientMessage(int ID, float x, float y, float z, boolean isPlayer) {
+        super();
+        this.ID = ID;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.isPlayer = isPlayer;
+
+    }
 }

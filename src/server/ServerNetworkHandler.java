@@ -1,5 +1,6 @@
 package server;
 
+import client.Player;
 import com.jme3.math.Vector3f;
 import com.jme3.network.ConnectionListener;
 import com.jme3.network.Filters;
@@ -9,9 +10,12 @@ import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
 import java.io.IOException;
+import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import messages.NewClientMessage;
+import messages.PlayerMessage;
 import messages.Registration;
 
 public class ServerNetworkHandler implements MessageListener, ConnectionListener {
@@ -20,6 +24,8 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
     Server server;
     ServerNetworkListener gameServer;
     public PlayField playfield;
+    public Hashtable <Integer, Vector3f> playerLocations = new Hashtable<Integer,Vector3f>();
+    public int targetID=-1;
 
     // -------------------------------------------------------------------------
     public ServerNetworkHandler(GameServer l) {
@@ -49,49 +55,59 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
 
 
 
-
         if (msg instanceof NewClientMessage) {
             // do something with the message
             NewClientMessage ncm = (NewClientMessage) msg;
-            
-          
-           
-           Vector3f target = new Vector3f(ncm.x,ncm.y,ncm.z);
-           
-           
-            //int targetID = playfield.getClosestPlayer(target);
-           System.out.println(" received: '" + ncm.ability + " from player " + ncm.ID +" shooting @ "+ target + " who's ID is ");
-           
 
-
-            if (ncm.ability.equals("Absorb") && state != STATE_ABSORB) {
-                state = STATE_ABSORB;
-            } else if (ncm.ability.equals("Absorb") && state == STATE_ABSORB) {
-                state = STATE_STOP_ABSORB;
-            } else if (ncm.ability.equals("Attack")) {
-                state = STATE_ATTACK;
-            } else if (ncm.ability.equals("Donation") && state != STATE_DONATION) {
-                state = STATE_DONATION;
-            } else if (ncm.ability.equals("Donation") && state == STATE_DONATION) {
-                state = STATE_STOP_DONATION;
-            } else if (ncm.ability.equals("Infusion")) {
-                state = STATE_INFUSION;
+            if (ncm.isPlayer) {
+                Vector3f playerLocation = new Vector3f(ncm.x, ncm.y, ncm.z);
+                System.out.println(playerLocation.toString());
+                playerLocations.put(ncm.ID, playerLocation);
             } else {
-                state = 0;
-            }
+                Vector3f target = new Vector3f(ncm.x, ncm.y, ncm.z);
+                int targetID = -1;
+                //System.out.println(playerLocations.size());
+                int counter = -1;
+                for (Vector3f v: playerLocations.values()) {
+                       
+                    if(v.distance(target)<= 1f){
+                        targetID = counter;
+                        break;  
+                    }else{
+                        counter++;
+                    }
+                   
+                }
+                System.out.println(" received: '" + ncm.ability + " from player " + ncm.ID + " shooting @ " + target + " who's ID is " + targetID);
+
+
+
+                if (ncm.ability.equals("Absorb") && state != STATE_ABSORB) {
+                    state = STATE_ABSORB;
+                } else if (ncm.ability.equals("Absorb") && state == STATE_ABSORB) {
+                    state = STATE_STOP_ABSORB;
+                } else if (ncm.ability.equals("Attack")) {
+                    state = STATE_ATTACK;
+                } else if (ncm.ability.equals("Donation") && state != STATE_DONATION) {
+                    state = STATE_DONATION;
+                } else if (ncm.ability.equals("Donation") && state == STATE_DONATION) {
+                    state = STATE_STOP_DONATION;
+                } else if (ncm.ability.equals("Infusion")) {
+                    state = STATE_INFUSION;
+                } else {
+                    state = 0;
+                }
 
 
             switch (state) {
                 case (STATE_ABSORB): {
-
-//                    ncm.setString(ncm.target + " being absorbed by " + ncm.ID);
-//                    sendToClient(ncm.target, ncm);
                     //ncm.target start decreasing using System.time.currentMILLIS()
                     //ncm.ID start inscreasing
+                    
+                    
                 }
                 break;
                 case (STATE_ATTACK): {
-
 //                    ncm.setString(ncm.target + " being attacked by " + ncm.ID);
 //                    sendToClient(ncm.target, ncm);
 
@@ -118,40 +134,28 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                      * 
                    
                      */
-
-
-
                 }
                 break;
                 case (STATE_DONATION): {
-
-
 //                    ncm.setString(ncm.target + " being donated from " + ncm.ID);
 //                    sendToClient(ncm.target, ncm);
 
                     /* exact same concept as absorb*/
-
                 }
                 break;
                 case (STATE_INFUSION): {
-
 //                    ncm.setString(ncm.target + " being infused from " + ncm.ID);
 //                    sendToClient(ncm.target, ncm);
-
                 }
                 break;
                 case (STATE_STOP_ABSORB): {
-
 //                    ncm.setString(ncm.target + " stopping absorb from " + ncm.ID);
 //                    sendToClient(ncm.target, ncm);
                 }
                 break;
                 case (STATE_STOP_DONATION): {
-
 //                    ncm.setString(ncm.target + " stopping donation from " + ncm.ID);
 //                    sendToClient(ncm.target, ncm);
-
-
                 }
                 break;
 
@@ -170,6 +174,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
 
             //     sendToClient(ncm.ID, ncm );
 
+            }
         }
     }
 
@@ -190,7 +195,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
             // Connection not accepted.
             System.out.println("Connection not accepted. Kicking out client. TODO!!!" + connID);
         }
-     
+
     }
 
     // -------------------------------------------------------------------------

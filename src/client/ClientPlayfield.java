@@ -7,6 +7,9 @@ package client;
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
 import com.jme3.math.ColorRGBA;
+import com.jme3.network.serializing.Serializable;
+import com.jme3.util.SafeArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import server.FieldData;
 
@@ -14,13 +17,17 @@ import server.FieldData;
  *
  * @author Rolf
  */
+
 public class ClientPlayfield {
+    
 
     SimpleApplication sa;
     Player p;
     LinkedList<Player> players;
+    Class<Player> elementType;
 
-    public ClientPlayfield(SimpleApplication sa) {
+ 
+   public ClientPlayfield(SimpleApplication sa) {
         this.sa = sa;
         players = new LinkedList<Player>();
     }

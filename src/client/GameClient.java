@@ -18,6 +18,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.Message;
+import com.jme3.network.serializing.Serializable;
 
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
@@ -28,8 +29,10 @@ import com.jme3.util.SkyFactory;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import messages.NewClientMessage;
+import messages.PlayerMessage;
 import server.FieldData;
 
+@Serializable
 public class GameClient extends SimpleApplication implements ClientNetworkListener, ActionListener {
     //
 
@@ -147,7 +150,17 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         playfield = new ClientPlayfield(this);
         for (FieldData fd : msg.field) {
             playfield.addSphere(fd);
+            
+            float x = playfield.p.fd.x;
+            float y = playfield.p.fd.y;
+            float z = playfield.p.fd.z;
+            
+            NewClientMessage ncm = new NewClientMessage(this.ID, x, y, z,true);
+            networkHandler.send(ncm);
         }
+
+
+
     }
 
     // -------------------------------------------------------------------------
@@ -190,15 +203,14 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                 Ray ray = new Ray(pos, dir);
 
                 for (Player player : playfield.players) {
-                    if(player.fd.id != this.ID){
-                         player.playerNode.collideWith(ray, results);
-                         System.out.println("TARGET PLAYER LOCATION: "+ player.fd.x + " ,"+player.fd.y+","+player.fd.z);
-                    }
-                    else{
+                    if (player.fd.id != this.ID) {
+                        player.playerNode.collideWith(ray, results);
+                        System.out.println("TARGET PLAYER LOCATION: " + player.fd.x + " ," + player.fd.y + "," + player.fd.z);
+                    } else {
                         System.out.println("Cannot target yourself!");
                     }
                 }
-              
+
 
                 System.out.println(ray.getDirection());
                 //System.out.println(playfield.p.playerNode.getLocalTranslation());

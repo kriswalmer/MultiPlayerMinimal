@@ -45,8 +45,10 @@ public class PlayField {
     
      public int getClosestPlayer(Vector3f target){
           int id = -1;
+          System.out.println(target.toString());
           for(FieldData fd : data){
-              if(fd.getMyLocation().distance(target)<= 1){
+              System.out.println(fd.getMyLocation().toString());
+              if(fd.getMyLocation().distance(target)<= 10f){
                   id = fd.id;
               }
           }
