@@ -25,7 +25,8 @@ public class ClientPlayfield {
     Player p;
     LinkedList<Player> players;
     Class<Player> elementType;
-
+    BitmapText healthText;
+    int space;
  
    public ClientPlayfield(SimpleApplication sa) {
         this.sa = sa;
@@ -52,13 +53,29 @@ public class ClientPlayfield {
     }
 
     public void initText(Player p) {
-        int space =  p.fd.id;
-        BitmapText healthText = new BitmapText(sa.getAssetManager().loadFont("Interface/Fonts/Arial.fnt"));
+        space =  p.fd.id;
+        healthText = new BitmapText(sa.getAssetManager().loadFont("Interface/Fonts/Arial.fnt"));
         healthText.setSize(sa.getAssetManager().loadFont("Interface/Fonts/Arial.fnt").getCharSet().getRenderedSize());      // font size
         healthText.setColor(ColorRGBA.Blue);                             // font color
-        healthText.setText(" Client " + space);             // the text
-        healthText.setLocalTranslation(space * 55, healthText.getLineHeight() + 30, 0); // position
+        healthText.setText(" Client " + space +" "+ p.energyLevel );             // the text
+        healthText.setLocalTranslation(space * 95, healthText.getLineHeight() + 30, 0); // position
         sa.getGuiNode().attachChild(healthText);
 
+    }
+    
+    public void updateText( int  energylevel , boolean actor)
+    {
+        if (actor){
+    this.p.energyLevel += energylevel;
+            
+        healthText.setText(" Client " + space +" : "+ p.energyLevel );             // the text
+       
+        }
+        if (!actor){
+    this.p.energyLevel -= energylevel;
+    healthText.setText(" Client " + space +" : "+ p.energyLevel );             // the text
+       
+            }
+        
     }
 }

@@ -47,8 +47,13 @@ public class ClientNetworkHandler implements MessageListener {
          if (msg instanceof NewClientMessage) {
       // do something with the message
       NewClientMessage ncm = (NewClientMessage) msg ; 
-      System.out.println(" received: '"+ncm.getString()+"'");
+      System.out.println(" received: '"+ncm.ability+"'");
             
+      
+      
+      
+      
+      
     }
     }
     

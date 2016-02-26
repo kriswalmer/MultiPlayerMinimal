@@ -17,8 +17,10 @@ public class NewClientMessage extends AbstractMessage {
 //   public Player p;
     public float x, y, z;
     //public Vector3f target;
-    public String ability;
+    public String ability = "";
     public boolean isPlayer;
+    public boolean actor;
+    public int target ; 
 
     // -------------------------------------------------------------------------
     public NewClientMessage() {
@@ -64,5 +66,13 @@ public class NewClientMessage extends AbstractMessage {
         this.z = z;
         this.isPlayer = isPlayer;
 
+    }
+    
+    public NewClientMessage(int ID  ,  String ability , int target  , boolean actor)
+    {
+    this.ID = ID ; 
+    this.ability = ability ; 
+    this.target = target ; 
+    this.actor = actor ;
     }
 }

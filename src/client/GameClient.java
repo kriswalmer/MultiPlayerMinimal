@@ -31,6 +31,7 @@ import java.awt.Toolkit;
 import messages.NewClientMessage;
 import messages.PlayerMessage;
 import server.FieldData;
+import server.PlayField;
 
 @Serializable
 public class GameClient extends SimpleApplication implements ClientNetworkListener, ActionListener {
@@ -258,6 +259,53 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                     System.out.println(ncm.getString());
                 }
             }
+            
+            
+           
+            if(!ncm.ability.equals(""))
+            {
+                if(ncm.ability.equals("Absorb") && ncm.actor ==false )
+                {
+                playfield.updateText(5 , ncm.actor );
+                System.out.println(playfield.p.energyLevel);
+                System.out.println(ncm.ability + " , " +  ncm.actor + ", " + ncm.ID);
+                
+                
+                }
+                if(ncm.ability.equals("Absorb") && ncm.actor ==true )
+                {
+                playfield.updateText(5 , ncm.actor );
+                System.out.println(playfield.p.energyLevel);
+                System.out.println(ncm.ability + " , " +  ncm.actor + ", " + ncm.ID);
+                }
+                
+                if(ncm.ability.equals("Donate") && ncm.actor ==false )
+                {
+                playfield.updateText(5 , ncm.actor );
+                System.out.println(playfield.p.energyLevel);
+                System.out.println(ncm.ability + " , " +  ncm.actor + ", " + ncm.ID);
+                
+                
+                }
+                if(ncm.ability.equals("Donate") && ncm.actor ==true )
+                {
+                playfield.updateText(-5 , ncm.actor );
+                System.out.println(playfield.p.energyLevel);
+                System.out.println(ncm.ability + " , " +  ncm.actor + ", " + ncm.ID);
+                }
+                
+                
+            
+            }
+            
+                
         }
+        
+        
+        
+    }
+    public ClientPlayfield getPlayfield()
+    {
+    return playfield;
     }
 }

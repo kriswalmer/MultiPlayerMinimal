@@ -80,10 +80,11 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                 }
                 System.out.println(" received: '" + ncm.ability + " from player " + ncm.ID + " shooting @ " + target + " who's ID is " + targetID);
 
-
+    
 
                 if (ncm.ability.equals("Absorb") && state != STATE_ABSORB) {
                     state = STATE_ABSORB;
+        
                 } else if (ncm.ability.equals("Absorb") && state == STATE_ABSORB) {
                     state = STATE_STOP_ABSORB;
                 } else if (ncm.ability.equals("Attack")) {
@@ -103,6 +104,14 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                 case (STATE_ABSORB): {
                     //ncm.target start decreasing using System.time.currentMILLIS()
                     //ncm.ID start inscreasing
+                    boolean aggressor = true ; 
+                NewClientMessage ability =  new NewClientMessage(ncm.ID , "Absorb" , targetID ,aggressor); ;
+                sendToClient(ncm.ID , ability);
+                
+                NewClientMessage myAbility = new NewClientMessage(targetID, "Absorb"  , ncm.ID , !aggressor ) ;  
+                sendToClient(targetID , myAbility);
+                
+                
                     
                     
                 }
@@ -140,6 +149,16 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
 //                    ncm.setString(ncm.target + " being donated from " + ncm.ID);
 //                    sendToClient(ncm.target, ncm);
 
+                    
+                    boolean actor = true ; 
+                NewClientMessage ability =  new NewClientMessage(ncm.ID , "Donate" , targetID ,actor); ;
+                sendToClient(ncm.ID , ability);
+                
+                NewClientMessage myAbility = new NewClientMessage(targetID, "Donate"  , ncm.ID , !actor ) ;  
+                sendToClient(targetID , myAbility);
+                
+                    
+                    
                     /* exact same concept as absorb*/
                 }
                 break;
