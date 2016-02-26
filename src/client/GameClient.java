@@ -151,12 +151,12 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
         playfield = new ClientPlayfield(this);
         for (FieldData fd : msg.field) {
             playfield.addSphere(fd);
-            
+
             float x = playfield.p.fd.x;
             float y = playfield.p.fd.y;
             float z = playfield.p.fd.z;
-            
-            NewClientMessage ncm = new NewClientMessage(this.ID, x, y, z,true);
+
+            NewClientMessage ncm = new NewClientMessage(this.ID, x, y, z, true);
             networkHandler.send(ncm);
         }
 
@@ -259,53 +259,115 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                     System.out.println(ncm.getString());
                 }
             }
-            
-            
-           
-            if(!ncm.ability.equals(""))
-            {
-                if(ncm.ability.equals("Absorb") && ncm.actor ==false )
-                {
-                playfield.updateText(5 , ncm.actor );
-                System.out.println(playfield.p.energyLevel);
-                System.out.println(ncm.ability + " , " +  ncm.actor + ", " + ncm.ID);
-                
-                
+
+
+
+            if (!ncm.ability.equals("")) {
+                if (ncm.ability.equals("Absorb") && ncm.actor == false) {
+                    playfield.updateText(5, ncm.actor);
+                    System.out.println(playfield.p.energyLevel);
+                    System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
+
+
                 }
-                if(ncm.ability.equals("Absorb") && ncm.actor ==true )
-                {
-                playfield.updateText(5 , ncm.actor );
-                System.out.println(playfield.p.energyLevel);
-                System.out.println(ncm.ability + " , " +  ncm.actor + ", " + ncm.ID);
+                if (ncm.ability.equals("Absorb") && ncm.actor == true) {
+                    playfield.updateText(5, ncm.actor);
+                    System.out.println(playfield.p.energyLevel);
+                    System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
                 }
-                
-                if(ncm.ability.equals("Donate") && ncm.actor ==false )
-                {
-                playfield.updateText(5 , ncm.actor );
-                System.out.println(playfield.p.energyLevel);
-                System.out.println(ncm.ability + " , " +  ncm.actor + ", " + ncm.ID);
-                
-                
+
+                if (ncm.ability.equals("Donate") && ncm.actor == false) {
+                    playfield.updateText(5, ncm.actor);
+                    System.out.println(playfield.p.energyLevel);
+                    System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
+
+
                 }
-                if(ncm.ability.equals("Donate") && ncm.actor ==true )
-                {
-                playfield.updateText(-5 , ncm.actor );
-                System.out.println(playfield.p.energyLevel);
-                System.out.println(ncm.ability + " , " +  ncm.actor + ", " + ncm.ID);
+                if (ncm.ability.equals("Donate") && ncm.actor == true) {
+                    playfield.updateText(-5, ncm.actor);
+                    System.out.println(playfield.p.energyLevel);
+                    System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
                 }
-                
-                
-            
+                if (ncm.ability.equals("Attack")) {
+                    int attackDamage = 0;
+                    Player targetedPlayer = new Player();
+
+                    for (Player p : playfield.players) {
+                        if (p.fd.id == ncm.ID) {
+                            attackDamage = playfield.p.energyLevel / 2;
+                        }
+                        if (p.fd.id == ncm.target) {
+                            targetedPlayer = p;
+                        }
+                    }
+
+                    if (ncm.actor == false) {
+                        playfield.updateText(-attackDamage, ncm.actor);
+                        System.out.println(playfield.p.energyLevel);
+                        System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
+
+
+                    }
+                    //FIX ARROW
+                    if (ncm.actor == true) {
+                        float x = targetedPlayer.fd.x;
+                        float y = targetedPlayer.fd.y;
+                        float z = targetedPlayer.fd.z;
+
+                        float x2 = playfield.p.fd.x;
+                        float y2 = playfield.p.fd.y;
+                        float z2 = playfield.p.fd.z;
+                        playfield.updateText(-attackDamage, ncm.actor);
+                        System.out.println("DRAW ARROW FROM: " + new Vector3f(x2, y2, z2) + " TO " + new Vector3f(x, y, z));
+                        playfield.p.drawArrow(new Vector3f(x2, y2, z2), new Vector3f(x, y, z));
+                        System.out.println(playfield.p.energyLevel);
+                        System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
+                    }
+                }
+
+                if (ncm.ability.equals("Infusion")) {
+                    int infusePower = 0;
+                    Player targetedPlayer = new Player();
+
+                    for (Player p : playfield.players) {
+                        if (p.fd.id == ncm.ID) {
+                            infusePower = playfield.p.energyLevel / 2;
+                        }
+                        if (p.fd.id == ncm.target) {
+                            targetedPlayer = p;
+                        }
+                    }
+
+                    if (ncm.actor == false) {
+                        playfield.updateText(infusePower, ncm.actor);
+                        System.out.println(playfield.p.energyLevel);
+                        System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
+
+
+                    }
+                    if (ncm.actor == true) {
+                        float x = targetedPlayer.fd.x;
+                        float y = targetedPlayer.fd.y;
+                        float z = targetedPlayer.fd.z;
+
+                        float x2 = playfield.p.fd.x;
+                        float y2 = playfield.p.fd.y;
+                        float z2 = playfield.p.fd.z;
+                        playfield.updateText(-infusePower, ncm.actor);
+                        System.out.println("DRAW ARROW FROM: " + new Vector3f(x2, y2, z2) + " TO " + new Vector3f(x, y, z));
+                        //playfield.p.drawArrow(new Vector3f(x2, y2, z2), new Vector3f(x, y, z));
+                        System.out.println(playfield.p.energyLevel);
+                        System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
+                    }
+
+                }
+
             }
-            
-                
+
         }
-        
-        
-        
     }
-    public ClientPlayfield getPlayfield()
-    {
-    return playfield;
+
+    public ClientPlayfield getPlayfield() {
+        return playfield;
     }
 }

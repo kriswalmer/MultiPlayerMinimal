@@ -24,8 +24,8 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
     Server server;
     ServerNetworkListener gameServer;
     public PlayField playfield;
-    public Hashtable <Integer, Vector3f> playerLocations = new Hashtable<Integer,Vector3f>();
-    public int targetID=-1;
+    public Hashtable<Integer, Vector3f> playerLocations = new Hashtable<Integer, Vector3f>();
+    public int targetID = -1;
 
     // -------------------------------------------------------------------------
     public ServerNetworkHandler(GameServer l) {
@@ -65,26 +65,24 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                 playerLocations.put(ncm.ID, playerLocation);
             } else {
                 Vector3f target = new Vector3f(ncm.x, ncm.y, ncm.z);
-                int targetID = -1;
+                targetID = -1;
                 //System.out.println(playerLocations.size());
-                int counter = -1;
-                for (Vector3f v: playerLocations.values()) {
-                       
-                    if(v.distance(target)<= 1f){
-                        targetID = counter;
-                        break;  
-                    }else{
-                        counter++;
+
+                for (int i = 0; i < playerLocations.size(); i++) {
+
+                    if (playerLocations.get(i).distance(target) <= 1f) {
+                        targetID = i;
+
                     }
-                   
+
                 }
                 System.out.println(" received: '" + ncm.ability + " from player " + ncm.ID + " shooting @ " + target + " who's ID is " + targetID);
 
-    
+
 
                 if (ncm.ability.equals("Absorb") && state != STATE_ABSORB) {
                     state = STATE_ABSORB;
-        
+
                 } else if (ncm.ability.equals("Absorb") && state == STATE_ABSORB) {
                     state = STATE_STOP_ABSORB;
                 } else if (ncm.ability.equals("Attack")) {
@@ -100,98 +98,110 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                 }
 
 
-            switch (state) {
-                case (STATE_ABSORB): {
-                    //ncm.target start decreasing using System.time.currentMILLIS()
-                    //ncm.ID start inscreasing
-                    boolean aggressor = true ; 
-                NewClientMessage ability =  new NewClientMessage(ncm.ID , "Absorb" , targetID ,aggressor); ;
-                sendToClient(ncm.ID , ability);
-                
-                NewClientMessage myAbility = new NewClientMessage(targetID, "Absorb"  , ncm.ID , !aggressor ) ;  
-                sendToClient(targetID , myAbility);
-                
-                
-                    
-                    
-                }
-                break;
-                case (STATE_ATTACK): {
+                switch (state) {
+                    case (STATE_ABSORB): {
+                        //ncm.target start decreasing using System.time.currentMILLIS()
+                        //ncm.ID start inscreasing
+                        boolean actor = true;
+                        NewClientMessage ability = new NewClientMessage(ncm.ID, "Absorb", targetID, actor);;
+                        sendToClient(ncm.ID, ability);
+
+                        NewClientMessage myAbility = new NewClientMessage(targetID, "Absorb", ncm.ID, !actor);
+                        sendToClient(targetID, myAbility);
+
+
+
+
+                    }
+                    break;
+                    case (STATE_ATTACK): {
+                        boolean actor = true;
+                        NewClientMessage ability = new NewClientMessage(ncm.ID, "Attack", targetID, actor);
+                        sendToClient(ncm.ID, ability);
+
+                        NewClientMessage myAbility = new NewClientMessage(targetID, "Attack", ncm.ID, !actor);
+                        sendToClient(targetID, myAbility);
+
 //                    ncm.setString(ncm.target + " being attacked by " + ncm.ID);
 //                    sendToClient(ncm.target, ncm);
 
-                    /*if(ncm.target getNodeScore() <  .5f *  ncm.ID getNodeScore())
+                        /*if(ncm.target getNodeScore() <  .5f *  ncm.ID getNodeScore())
                    
-                     * Create red lazer arrow 
-                     * get location 
-                     * 
-                     * 
-                     * 
-                     * 
-                     *  Arrow arrow = new Arrow(new Vector3f(ncm.ID));
-                     arrow.setLineWidth(5f);
-                     geomArrow = new Geometry("a", arrow);
-                     * Material matArrow =  
+                         * Create red lazer arrow 
+                         * get location 
+                         * 
+                         * 
+                         * 
+                         * 
+                         *  Arrow arrow = new Arrow(new Vector3f(ncm.ID));
+                         arrow.setLineWidth(5f);
+                         geomArrow = new Geometry("a", arrow);
+                         * Material matArrow =  
                          
-                     mat = new Material(assetManager,
-                     "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material
-                     mat.setColor("Color", ColorRGBA.Red);
-                     geomArrow.setMaterial(mat);
-                     * sa.getRootNode.attach(geomArrow);
-                     * 
-                     * detach ncm target 
-                     * 
+                         mat = new Material(assetManager,
+                         "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material
+                         mat.setColor("Color", ColorRGBA.Red);
+                         geomArrow.setMaterial(mat);
+                         * sa.getRootNode.attach(geomArrow);
+                         * 
+                         * detach ncm target 
+                         * 
                    
-                     */
-                }
-                break;
-                case (STATE_DONATION): {
+                         */
+                    }
+                    break;
+                    case (STATE_DONATION): {
 //                    ncm.setString(ncm.target + " being donated from " + ncm.ID);
 //                    sendToClient(ncm.target, ncm);
 
-                    
-                    boolean actor = true ; 
-                NewClientMessage ability =  new NewClientMessage(ncm.ID , "Donate" , targetID ,actor); ;
-                sendToClient(ncm.ID , ability);
-                
-                NewClientMessage myAbility = new NewClientMessage(targetID, "Donate"  , ncm.ID , !actor ) ;  
-                sendToClient(targetID , myAbility);
-                
-                    
-                    
-                    /* exact same concept as absorb*/
-                }
-                break;
-                case (STATE_INFUSION): {
+                        boolean actor = true;
+                        NewClientMessage ability = new NewClientMessage(ncm.ID, "Donate", targetID, actor);;
+                        sendToClient(ncm.ID, ability);
+
+                        NewClientMessage myAbility = new NewClientMessage(targetID, "Donate", ncm.ID, !actor);
+                        sendToClient(targetID, myAbility);
+
+
+
+                        /* exact same concept as absorb*/
+                    }
+                    break;
+                    case (STATE_INFUSION): {
 //                    ncm.setString(ncm.target + " being infused from " + ncm.ID);
 //                    sendToClient(ncm.target, ncm);
-                }
-                break;
-                case (STATE_STOP_ABSORB): {
+                        boolean actor = true;
+                        NewClientMessage ability = new NewClientMessage(ncm.ID, "Infusion", targetID, actor);
+                        sendToClient(ncm.ID, ability);
+
+                        NewClientMessage myAbility = new NewClientMessage(targetID, "Infusion", ncm.ID, !actor);
+                        sendToClient(targetID, myAbility);
+                    }
+                    break;
+                    case (STATE_STOP_ABSORB): {
 //                    ncm.setString(ncm.target + " stopping absorb from " + ncm.ID);
 //                    sendToClient(ncm.target, ncm);
-                }
-                break;
-                case (STATE_STOP_DONATION): {
+                    }
+                    break;
+                    case (STATE_STOP_DONATION): {
 //                    ncm.setString(ncm.target + " stopping donation from " + ncm.ID);
 //                    sendToClient(ncm.target, ncm);
+                    }
+                    break;
+
+
                 }
-                break;
-
-
-            }
-            //    System.out.println("absorb target ");
-            //    NewClientMessage ncmtarget = (NewClientMessage) msg ; 
-            // TODO add ncm to target after target ID is in NCM class  
-            //sendToClient(ncm.getTarget() ,  ncmtarget);
-            // AttackMethods am = new AttackMethod(); 
-            //  am.absorb()
+                //    System.out.println("absorb target ");
+                //    NewClientMessage ncmtarget = (NewClientMessage) msg ; 
+                // TODO add ncm to target after target ID is in NCM class  
+                //sendToClient(ncm.getTarget() ,  ncmtarget);
+                // AttackMethods am = new AttackMethod(); 
+                //  am.absorb()
 
 
 
-            //     ncm.setString("message recieved + " + ncm.getString());
+                //     ncm.setString("message recieved + " + ncm.getString());
 
-            //     sendToClient(ncm.ID, ncm );
+                //     sendToClient(ncm.ID, ncm );
 
             }
         }
