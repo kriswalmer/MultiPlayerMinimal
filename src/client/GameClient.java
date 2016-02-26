@@ -260,73 +260,81 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                 }
             }
 
-            boolean absorbing = false ; 
-            float startTime  =  System.currentTimeMillis() / 1000 ; 
-            float updateTime =  System.currentTimeMillis() / 1000 ; 
+            boolean absorbing = false;
+            float startTime = System.currentTimeMillis() / 1000;
+            float updateTime = System.currentTimeMillis() / 1000;
 
 
             if (!ncm.ability.equals("")) {
                 System.out.println("players size = " + playfield.players.size());
                 for (Player p : playfield.players) {
-                    System.out.println(" " + ncm.ID + " uses " + ncm.ability + " target "  + ncm.target ); 
-                        if (p.fd.id == ncm.ID && ncm.ability.equals("Absorb")) {
-                System.out.println("u are absorbing"); 
-                
-                    playfield.updateText(5, ncm.actor);
-                    absorbing =true ; 
+                    System.out.println(" " + ncm.ID + " uses " + ncm.ability + " target " + ncm.target);
+                    if (this.ID == ncm.ID && ncm.ability.equals("Absorb")) {
+                        System.out.println("u are absorbing");
 
-                }
-                if (p.fd.id == ncm.target && ncm.ability.equals("Absorb"))
-                {
-                    
-                    System.out.println("you are absorbed ");
-                    playfield.updateText(5, ncm.actor);
-                  }
-                if (p.fd.id == ncm.ID && ncm.ability.equals("Donate")){
-                 
-                    playfield.updateText(5, ncm.actor);
-                
+                        playfield.updateText(5, ncm.actor);
+                        absorbing = true;
 
-                }
-                if (p.fd.id == ncm.target && ncm.ability.equals("Donate"))
-                {
-                    playfield.updateText(-5, ncm.actor);
-                  }
-                }
-                
-                
-                if (ncm.ability.equals("Attack")) {
-                    int attackDamage = 0;
-                    Player targetedPlayer = new Player();
+                    } else if (this.ID == ncm.target && ncm.ability.equals("Absorb")) {
 
-                    for (Player p : playfield.players) {
-                        if (p.fd.id == ncm.ID) {
-                            attackDamage = playfield.p.energyLevel / 2;
-                        }
-                        if (p.fd.id == ncm.target) {
-                            targetedPlayer = p;
-                        }
+                        System.out.println("you are absorbed ");
+                        playfield.updateText(5, ncm.actor);
+                    } else if (this.ID == ncm.ID && ncm.ability.equals("Donate")) {
+
+                        playfield.updateText(5, ncm.actor);
+
+
+                    } else if (this.ID == ncm.target && ncm.ability.equals("Donate")) {
+                        playfield.updateText(-5, ncm.actor);
                     }
 
-                    if (ncm.actor == false) {
-                        playfield.updateText(-attackDamage, ncm.actor);
-                 
+                    if (ncm.ability.equals("Attack")) {
+                        int attackDamage = 0;
+                        Player targetedPlayer = new Player();
+
+                        for (Player play : playfield.players) {
+
+                            if (play.fd.id == ncm.ID) {
+                                attackDamage = playfield.p.energyLevel / 2;
+
+                            }
+                            if (play.fd.id == ncm.target) {
+                                targetedPlayer = play;
+
+                            }
+                        }
+
+                        if (this.ID == ncm.ID) {
+                            float x = targetedPlayer.fd.x;
+                            float y = targetedPlayer.fd.y;
+                            float z = targetedPlayer.fd.z;
+                            
+
+                            float x2 = playfield.p.fd.x;
+                            float y2 = playfield.p.fd.y;
+                            float z2 = playfield.p.fd.z;
+                            
+                            System.out.println("Attackers location: "+ new Vector3f(x2,y2,z2));
+                            playfield.updateText(-attackDamage, ncm.actor);
+                            System.out.println("I AM ATTACKING: DRAW ARROW FROM: " + new Vector3f(x2, y2, z2) + " TO " + new Vector3f(x, y, z));
+                            playfield.p.drawArrow(new Vector3f(x2, y2, z2), new Vector3f(x, y, z),ncm.ability);
+                        } else if(this.ID == ncm.target) {
+                            System.out.println("I was attacked. OW!");
+                            playfield.updateText(-attackDamage, ncm.actor);
+                        }
+
+
+
 
                     }
-                    //FIX ARROW
-                    if (ncm.actor == true) {
-                        float x = targetedPlayer.fd.x;
-                        float y = targetedPlayer.fd.y;
-                        float z = targetedPlayer.fd.z;
 
-                        float x2 = playfield.p.fd.x;
-                        float y2 = playfield.p.fd.y;
-                        float z2 = playfield.p.fd.z;
-                        playfield.updateText(-attackDamage, ncm.actor);
-                        System.out.println("DRAW ARROW FROM: " + new Vector3f(x2, y2, z2) + " TO " + new Vector3f(x, y, z));
-                        playfield.p.drawArrow(new Vector3f(x2, y2, z2), new Vector3f(x, y, z));
-                     }
+
                 }
+
+
+
+                //FIX ARROW
+
 
                 if (ncm.ability.equals("Infusion")) {
                     int infusePower = 0;
@@ -341,12 +349,13 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         }
                     }
 
-                    if (ncm.actor == false) {
+                    if (this.ID == ncm.target) {
                         playfield.updateText(infusePower, ncm.actor);
-                   
+                        System.out.println("I AM BEING INFUSED");
 
-                    }
-                    if (ncm.actor == true) {
+
+                    }else
+                    if (this.ID == ncm.ID) {
                         float x = targetedPlayer.fd.x;
                         float y = targetedPlayer.fd.y;
                         float z = targetedPlayer.fd.z;
@@ -355,16 +364,16 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         float y2 = playfield.p.fd.y;
                         float z2 = playfield.p.fd.z;
                         playfield.updateText(-infusePower, ncm.actor);
-                        System.out.println("DRAW ARROW FROM: " + new Vector3f(x2, y2, z2) + " TO " + new Vector3f(x, y, z));
-                        //playfield.p.drawArrow(new Vector3f(x2, y2, z2), new Vector3f(x, y, z));
+                        System.out.println("I AM INFUSING DRAW ARROW FROM: " + new Vector3f(x2, y2, z2) + " TO " + new Vector3f(x, y, z));
+                        
+                        playfield.p.drawArrow(new Vector3f(x2, y2, z2), new Vector3f(x, y, z),ncm.ability);
                     }
 
                 }
-                if(ncm.ability.equals("StopAbsorb"))
-                {
-                    
-                absorbing = false ; 
-                
+                if (ncm.ability.equals("StopAbsorb")) {
+
+                    absorbing = false;
+
                 }
 
             }

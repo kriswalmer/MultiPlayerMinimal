@@ -115,10 +115,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                     case (STATE_ATTACK): {
                         boolean actor = true;
                         NewClientMessage ability = new NewClientMessage(ncm.ID, "Attack", targetID, actor);
-                        sendToClient(ncm.ID, ability);
-
-                        NewClientMessage myAbility = new NewClientMessage(targetID, "Attack", ncm.ID, !actor);
-                        sendToClient(targetID, myAbility);
+                        broadcast(ability);
                  
                     }
                     break;
@@ -128,10 +125,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
 
                         boolean actor = true;
                         NewClientMessage ability = new NewClientMessage(ncm.ID, "Donate", targetID, actor);;
-                        sendToClient(ncm.ID, ability);
-
-                        NewClientMessage myAbility = new NewClientMessage(targetID, "Donate", ncm.ID, !actor);
-                        sendToClient(targetID, myAbility);
+                        broadcast(ability);
 
 
 
@@ -143,10 +137,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
 //                    sendToClient(ncm.target, ncm);
                         boolean actor = true;
                         NewClientMessage ability = new NewClientMessage(ncm.ID, "Infusion", targetID, actor);
-                        sendToClient(ncm.ID, ability);
-
-                        NewClientMessage myAbility = new NewClientMessage(targetID, "Infusion", ncm.ID, !actor);
-                        sendToClient(targetID, myAbility);
+                        broadcast(ability);
                     }
                     break;
                     case (STATE_STOP_ABSORB): {

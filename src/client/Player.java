@@ -14,6 +14,7 @@ import com.jme3.network.serializing.Serializable;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.debug.Arrow;
+import com.jme3.scene.shape.Line;
 import com.jme3.scene.shape.Sphere;
 import server.FieldData;
 
@@ -28,6 +29,7 @@ public class Player extends Node {
     public FieldData fd;
     public Node playerNode = new Node();
     public SimpleApplication sa;
+    public Node laserNode;
 
     public Player() {
     }
@@ -46,14 +48,15 @@ public class Player extends Node {
         sg.setMaterial(mat);
         sg.setLocalTranslation(fd.x, fd.y, fd.z);
         playerNode.attachChild(sg);
+        
 
 
     }
 
-    public void drawArrow(Vector3f position, Vector3f target) {
+    public void drawArrow(Vector3f position, Vector3f target, String ability) {
 
 
-        Vector3f unitX = new Vector3f(1, 0, 0);
+        Vector3f unitX = new Vector3f(1,0,0);
         Vector3f rotAxis = unitX.cross(target);
         float sinAlpha = rotAxis.length();
         float cosineAlpha = unitX.dot(target);
@@ -61,18 +64,42 @@ public class Player extends Node {
 
         Quaternion q = new Quaternion();
         q.fromAngleAxis(alpha, rotAxis);
-        Arrow laser1 = new Arrow(position);
-        Geometry laser1Geom = new Geometry("Laser1", laser1);
-
-        laser1.setLineWidth(100f);
+        Arrow laser1 = new Arrow();
         
+        Line laserLine = new Line(position,target);
+        
+        
+        
+       
+        Geometry laser1Geom = new Geometry("Laser1", laserLine);
+        
+        //laser1Geom.rotate(q);
+
+        laserLine.setLineWidth(100f);
+
 
         Material laser1Mat = new Material(sa.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
         laser1Mat.setBoolean("UseMaterialColors", true);
-        laser1Mat.setColor("Ambient", ColorRGBA.Red);
-        laser1Mat.setColor("Diffuse", ColorRGBA.Red);
-        laser1Geom.setMaterial(laser1Mat);
+        if (ability.equals("Attack")) {
+            laser1Mat.setColor("Ambient", ColorRGBA.Red);
+            laser1Mat.setColor("Diffuse", ColorRGBA.Red);
+        }
+        if (ability.equals("Absorb")) {
+            laser1Mat.setColor("Ambient", ColorRGBA.Orange);
+            laser1Mat.setColor("Diffuse", ColorRGBA.Orange);
+        }
+        if (ability.equals("Donate")) {
+            laser1Mat.setColor("Ambient", ColorRGBA.Cyan);
+            laser1Mat.setColor("Diffuse", ColorRGBA.Cyan);
+        }
+        if (ability.equals("Infusion")) {
+            laser1Mat.setColor("Ambient", ColorRGBA.Green);
+            laser1Mat.setColor("Diffuse", ColorRGBA.Green);
+        }
 
+        laser1Geom.setMaterial(laser1Mat);
+        System.out.println("LASER AT: " +laser1Geom.getLocalTranslation());
+        
         playerNode.attachChild(laser1Geom);
 
 
