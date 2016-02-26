@@ -52,7 +52,7 @@ public class GameServer implements ServerNetworkListener {
         }
         // send entire playfield to new client
         NewClientMessage iniCM = new NewClientMessage(connectionID, playfield.data);
-        iniCM.setString("Hello client");
+        iniCM.setString("Hello client + " +  connectionID + " added");
 
 
 

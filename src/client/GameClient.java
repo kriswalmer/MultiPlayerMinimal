@@ -260,34 +260,41 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                 }
             }
 
+            boolean absorbing = false ; 
+            float startTime  =  System.currentTimeMillis() / 1000 ; 
+            float updateTime =  System.currentTimeMillis() / 1000 ; 
 
 
             if (!ncm.ability.equals("")) {
-                if (ncm.ability.equals("Absorb") && ncm.actor == false) {
+                System.out.println("players size = " + playfield.players.size());
+                for (Player p : playfield.players) {
+                    System.out.println(" " + ncm.ID + " uses " + ncm.ability + " target "  + ncm.target ); 
+                        if (p.fd.id == ncm.ID && ncm.ability.equals("Absorb")) {
+                System.out.println("u are absorbing"); 
+                
                     playfield.updateText(5, ncm.actor);
-                    System.out.println(playfield.p.energyLevel);
-                    System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
-
+                    absorbing =true ; 
 
                 }
-                if (ncm.ability.equals("Absorb") && ncm.actor == true) {
+                if (p.fd.id == ncm.target && ncm.ability.equals("Absorb"))
+                {
+                    
+                    System.out.println("you are absorbed ");
                     playfield.updateText(5, ncm.actor);
-                    System.out.println(playfield.p.energyLevel);
-                    System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
-                }
-
-                if (ncm.ability.equals("Donate") && ncm.actor == false) {
+                  }
+                if (p.fd.id == ncm.ID && ncm.ability.equals("Donate")){
+                 
                     playfield.updateText(5, ncm.actor);
-                    System.out.println(playfield.p.energyLevel);
-                    System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
-
+                
 
                 }
-                if (ncm.ability.equals("Donate") && ncm.actor == true) {
+                if (p.fd.id == ncm.target && ncm.ability.equals("Donate"))
+                {
                     playfield.updateText(-5, ncm.actor);
-                    System.out.println(playfield.p.energyLevel);
-                    System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
+                  }
                 }
+                
+                
                 if (ncm.ability.equals("Attack")) {
                     int attackDamage = 0;
                     Player targetedPlayer = new Player();
@@ -303,9 +310,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 
                     if (ncm.actor == false) {
                         playfield.updateText(-attackDamage, ncm.actor);
-                        System.out.println(playfield.p.energyLevel);
-                        System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
-
+                 
 
                     }
                     //FIX ARROW
@@ -320,9 +325,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         playfield.updateText(-attackDamage, ncm.actor);
                         System.out.println("DRAW ARROW FROM: " + new Vector3f(x2, y2, z2) + " TO " + new Vector3f(x, y, z));
                         playfield.p.drawArrow(new Vector3f(x2, y2, z2), new Vector3f(x, y, z));
-                        System.out.println(playfield.p.energyLevel);
-                        System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
-                    }
+                     }
                 }
 
                 if (ncm.ability.equals("Infusion")) {
@@ -340,9 +343,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 
                     if (ncm.actor == false) {
                         playfield.updateText(infusePower, ncm.actor);
-                        System.out.println(playfield.p.energyLevel);
-                        System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
-
+                   
 
                     }
                     if (ncm.actor == true) {
@@ -356,10 +357,14 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         playfield.updateText(-infusePower, ncm.actor);
                         System.out.println("DRAW ARROW FROM: " + new Vector3f(x2, y2, z2) + " TO " + new Vector3f(x, y, z));
                         //playfield.p.drawArrow(new Vector3f(x2, y2, z2), new Vector3f(x, y, z));
-                        System.out.println(playfield.p.energyLevel);
-                        System.out.println(ncm.ability + " , " + ncm.actor + ", " + ncm.ID);
                     }
 
+                }
+                if(ncm.ability.equals("StopAbsorb"))
+                {
+                    
+                absorbing = false ; 
+                
                 }
 
             }
