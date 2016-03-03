@@ -63,19 +63,12 @@ public class ClientPlayfield {
 
     }
     
-    public void updateText( int  energylevel , boolean actor)
+    public void updateHealth( int  energylevel , Player me)
     {
-        if (actor){
-    this.p.energyLevel += energylevel;
-            
-        healthText.setText(" Client " + space +" : "+ p.energyLevel );             // the text
-       
-        }
-        if (!actor){
-    this.p.energyLevel -= energylevel;
-    healthText.setText(" Client " + space +" : "+ p.energyLevel );             // the text
-       
-            }
-        
+    me.energyLevel+= energylevel;
+    }
+    
+    public void updateHealthText(){
+         healthText.setText("Client" + space + ":"+ p.energyLevel);
     }
 }
