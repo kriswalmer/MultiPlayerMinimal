@@ -25,6 +25,8 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
     ServerNetworkListener gameServer;
     public PlayField playfield;
     public Hashtable<Integer, Vector3f> playerLocations = new Hashtable<Integer, Vector3f>();
+    public Hashtable<Integer, Integer> playerHealths = new Hashtable<Integer, Integer>();
+    public Integer[] healths = new Integer[5];
     public int targetID = -1;
 
     // -------------------------------------------------------------------------
@@ -54,10 +56,24 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
         int state = 0;
 
 
-
         if (msg instanceof NewClientMessage) {
             // do something with the message
             NewClientMessage ncm = (NewClientMessage) msg;
+
+           
+            playerHealths.put(ncm.ID, ncm.healthLevel);
+
+         
+
+
+            System.out.println("Recieved Health levels!");
+            for (int i = 0; i < playerHealths.size(); i++) {
+                System.out.println("Player " + i + " has : " + playerHealths.get(i) + " health left.");
+            }
+
+            NewClientMessage healthMessage = new NewClientMessage(playerHealths);
+            broadcast(healthMessage);
+
 
             if (ncm.isPlayer) {
                 Vector3f playerLocation = new Vector3f(ncm.x, ncm.y, ncm.z);
@@ -104,10 +120,10 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                         //ncm.ID start inscreasing
                         boolean actor = true;
                         NewClientMessage ability = new NewClientMessage(ncm.ID, "Absorb", targetID, actor);;
-                       // sendToClient(ncm.ID, ability);
-                         broadcast(ability); 
-                      
-                        
+                        // sendToClient(ncm.ID, ability);
+                        broadcast(ability);
+
+
 
 
                     }
@@ -116,7 +132,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                         boolean actor = true;
                         NewClientMessage ability = new NewClientMessage(ncm.ID, "Attack", targetID, actor);
                         broadcast(ability);
-                 
+
                     }
                     break;
                     case (STATE_DONATION): {
@@ -143,28 +159,28 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
                     case (STATE_STOP_ABSORB): {
 //                    ncm.setString(ncm.target + " stopping absorb from " + ncm.ID);
 //                    sendToClient(ncm.target, ncm);
-                    
-                    
-                    boolean actor = true;
+
+
+                        boolean actor = true;
                         NewClientMessage ability = new NewClientMessage(ncm.ID, "StopAbsorb", targetID, actor);;
                         sendToClient(ncm.ID, ability);
 
                         NewClientMessage myAbility = new NewClientMessage(targetID, "StopAbsorb", ncm.ID, !actor);
                         sendToClient(targetID, myAbility);
-                    
-                    
+
+
                     }
                     break;
                     case (STATE_STOP_DONATION): {
 //                    }
-                    break;
+                        break;
 
+
+                    }
 
                 }
-               
             }
         }
-    }
     }
 
     // -------------------------------------------------------------------------
@@ -176,7 +192,7 @@ public class ServerNetworkHandler implements MessageListener, ConnectionListener
             // gameServer.newConnectionReceived throws an Exception
             // if the connection should not be accepted.
             m = gameServer.newConnectionReceived(connID);
-            
+
             // if all is ok, broadcast gameServer-created message
             // this is usually an InitialClientMessage
             // (which is just not hard coded here to keep it customizable).

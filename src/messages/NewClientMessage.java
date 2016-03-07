@@ -5,6 +5,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 import com.jme3.util.SafeArrayList;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import server.FieldData;
 
@@ -13,6 +14,9 @@ public class NewClientMessage extends AbstractMessage {
 
     public int ID;
     public LinkedList<FieldData> field;
+    public LinkedList<Integer> healthLevels;
+    public int healthLevel = -10000;
+    public Hashtable<Integer, Integer> healths;
     public String s;
 //   public Player p;
     public float x, y, z;
@@ -20,7 +24,7 @@ public class NewClientMessage extends AbstractMessage {
     public String ability = "";
     public boolean isPlayer;
     public boolean actor;
-    public int target ; 
+    public int target;
 
     // -------------------------------------------------------------------------
     public NewClientMessage() {
@@ -31,7 +35,7 @@ public class NewClientMessage extends AbstractMessage {
         super();
         this.ID = ID;
         this.field = playfield;
-        this.isPlayer= false;
+        this.isPlayer = false;
 
     }
 
@@ -67,12 +71,21 @@ public class NewClientMessage extends AbstractMessage {
         this.isPlayer = isPlayer;
 
     }
+
+    public NewClientMessage(int ID, String ability, int target, boolean actor) {
+        this.ID = ID;
+        this.ability = ability;
+        this.target = target;
+        this.actor = actor;
+    }
+
+    public NewClientMessage(int ID, int healthLevel) {
+        this.ID = ID;
+        this.healthLevel = healthLevel;
+
+    }
     
-    public NewClientMessage(int ID  ,  String ability , int target  , boolean actor)
-    {
-    this.ID = ID ; 
-    this.ability = ability ; 
-    this.target = target ; 
-    this.actor = actor ;
+    public NewClientMessage(Hashtable<Integer, Integer> healths){
+        this.healths = healths;
     }
 }

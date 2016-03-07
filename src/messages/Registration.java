@@ -6,6 +6,7 @@ import client.Player;
 import com.jme3.network.serializing.Serializer;
 import com.jme3.scene.Node;
 import com.jme3.util.SafeArrayList;
+import java.lang.reflect.Array;
 import server.FieldData;
 
 /**
@@ -22,6 +23,7 @@ public class Registration {
         Serializer.registerClass(PlayerMessage.class);
         Serializer.registerClass(FieldData.class);
         Serializer.registerClass(Player.class);
+        
       
     }
 }
