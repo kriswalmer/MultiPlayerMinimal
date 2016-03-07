@@ -76,20 +76,14 @@ public class ClientPlayfield {
 
     }
 
-    public void updateHealthText(int id) {
+    public void updateHealthText(int id, int energyLevel) {
         BitmapText myHealth = energyLevelText.get(id);
-        myHealth.setText(" Client " + id + " : " + p.energyLevel);
+        myHealth.setText(" Client " + id + " : " + energyLevel);
     }
 
-    public void updateFieldText() {
-        for (int i = 0; i < players.size(); i++) {
-            int health = energyLevels.get(i);
-            System.out.println("HEALTH AT INDEX "+ i + " = " +health);
-            BitmapText ht = energyLevelText.get(i);
-
-
-            ht.setText(" Client " + i + " : " + health);
-
-        }
+    public void updateFieldText(int id) {
+        
+       
     }
 }
+

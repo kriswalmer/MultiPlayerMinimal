@@ -190,11 +190,8 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 
 
                 Vector2f mouseCoords = new Vector2f(inputManager.getCursorPosition().x, inputManager.getCursorPosition().y);
-
                 CollisionResults results = new CollisionResults();
-
                 Vector3f pos = cam.getWorldCoordinates(mouseCoords, 0).clone();
-
                 Vector3f dir = cam.getWorldCoordinates(mouseCoords, 1f).clone();
 
 
@@ -254,6 +251,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
             if (ncm.healths != null) {
 
                 for (int i = 0; i < ncm.healths.size(); i++) {
+                    playfield.updateHealthText(i, ncm.healths.get(i));
                     System.out.println("Player " + i + " has " + ncm.healths.get(i) + " health remaining.");
                 }
             }
@@ -307,7 +305,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 
                         playfield.updateHealth(5, p);
 
-                        playfield.updateHealthText(this.ID);
+                        
 
                         playfield.p.drawArrow(myVector, targetVector, ncm.ability);
 
@@ -315,18 +313,18 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 
                         System.out.println("you are absorbed ");
                         playfield.updateHealth(-5, p);
-                        playfield.updateHealthText(this.ID);
+                       
                         playfield.p.drawArrow(myVector, targetVector, ncm.ability);
 
                     } else if (this.ID == ncm.ID && ncm.ability.equals("Donate")) {
 
                         playfield.updateHealth(-5, p);
-                        playfield.updateHealthText(this.ID);
+                        
                         playfield.p.drawArrow(myVector, targetVector, ncm.ability);
 
                     } else if (this.ID == ncm.target && ncm.ability.equals("Donate")) {
                         playfield.updateHealth(5, p);
-                        playfield.updateHealthText(this.ID);
+                        
                         playfield.p.drawArrow(myVector, targetVector, ncm.ability);
 
                     } else if (this.ID != ncm.target && this.ID != ncm.ID) {
@@ -341,26 +339,26 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 
 
                             playfield.updateHealth(-power, p);
-                            playfield.updateHealthText(this.ID);
+                           
 
                             playfield.p.drawArrow(myVector, targetVector, ncm.ability);
 
 
                             for (int i = 0; i < playfield.players.size(); i++) {
                                 if (ncm.target == playfield.players.get(i).fd.id) {
-                                    playfield.updateHealthText(this.ID);
+                                    
                                 }
                             }
 
                         } else if (this.ID == ncm.target) {
                             System.out.println("I was attacked. OW!");
                             playfield.updateHealth(-power, p);
-                            playfield.updateHealthText(this.ID);
+                            
                             playfield.p.drawArrow(myVector, targetVector, ncm.ability);
 
                             for (int i = 0; i < playfield.players.size(); i++) {
                                 if (ncm.ID == playfield.players.get(i).fd.id) {
-                                    playfield.updateHealthText(this.ID);
+                                   
                                 }
                             }
 
@@ -374,7 +372,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
 
                         if (this.ID == ncm.target) {
                             playfield.updateHealth(power, p);
-                            playfield.updateHealthText(this.ID);
+                          
                             System.out.println("I AM BEING INFUSED");
                             playfield.p.drawArrow(new Vector3f(x2, y2, z2), new Vector3f(x, y, z), ncm.ability);
 
@@ -382,7 +380,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                         } else if (this.ID == ncm.ID) {
 
                             playfield.updateHealth(-power, p);
-                            playfield.updateHealthText(this.ID);
+                            
 
                             playfield.p.drawArrow(new Vector3f(x2, y2, z2), new Vector3f(x, y, z), ncm.ability);
                         } else if (this.ID != ncm.target && this.ID != ncm.ID) {
@@ -394,7 +392,7 @@ public class GameClient extends SimpleApplication implements ClientNetworkListen
                 }
 
                 System.out.println("energy level " + playfield.p.energyLevel);
-                playfield.updateHealthText(this.ID);
+               
 
                 NewClientMessage healthmessage = new NewClientMessage(this.ID, playfield.p.energyLevel);
                 networkHandler.send(healthmessage);
